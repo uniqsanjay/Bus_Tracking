@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".User_Selectroot">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Routes"
+        android:textSize="30dp"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="From:"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ambattur"
+        android:enabled="false"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ic_location_on_black_24dp"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To:"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/dest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Eg.Ambattur Estate"
+        android:enabled="true"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ic_location_on_black_24dp"
+        android:textSize="20dp"/>
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Search"/>
+
+    <RelativeLayout
+        android:id="@+id/rootlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:paddingTop="20dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Eg.Ambattur Estate"
+            android:enabled="true"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:textSize="20dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/user_root_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+</LinearLayout>
