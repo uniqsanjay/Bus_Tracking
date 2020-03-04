@@ -2,6 +2,7 @@ package com.mtcbustracking.bustracking;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -29,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -36,6 +38,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.Random;
 
 public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
 
@@ -48,7 +52,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
     AppLocationService appLocationService;
     LatLng latLng1;
     DatabaseReference df;
-    int tot, availabel, occupied;
+    int tot, availabel, occupied, num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +68,14 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
         gps = findViewById(R.id.gps);
         seats = findViewById(R.id.total_seat);
 
-        getBusLocation();
+
+
+
+        mapFragment.getMapAsync(HomePage.this);
         gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mapFragment.getMapAsync(HomePage.this);
+                //mapFragment.getMapAsync(HomePage.this);
             }
         });
 
@@ -80,6 +87,16 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
                 startActivity(new Intent(HomePage.this, ViewBusCapacity.class));
             }
         });
+
+        final Random random=new Random();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new Handler().postDelayed(this, 2000);
+                num = random.nextInt(90) + 10;
+            }
+        }, 2000);
+
     }
 
     @Override
@@ -110,6 +127,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
         public void onLocationChanged(Location location) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             //LatLng latLng1 = new LatLng(13.050428, 80.234941);
+            getBusLocation();
 
             //Getting the address from lat and lan coordinates
 
@@ -124,15 +142,55 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
             map.addMarker(new MarkerOptions()
             .position(latLng));
 
-            Marker marker = map.addMarker(new MarkerOptions()
-            .position(latLng1)
-            .title("Est Time")
-            .snippet("17min"));
-            marker.showInfoWindow();
+            //Getting location from the firebase database
+            df = FirebaseDatabase.getInstance().getReference().child("bustrack");
+            df.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    double lat = Long.parseLong(dataSnapshot.child("latitude").getValue().toString());
+                    double lan = Long.parseLong(dataSnapshot.child("longitude").getValue().toString());
+                    latLng1 = new LatLng(lat, lan);
+                    //latLng1 = new LatLng(13.050428, 80.234941);
+                    Marker marker = map.addMarker(new MarkerOptions()
+                            .position(latLng1)
+                            .title("Est Time")
+                            .snippet(num+"min"));
+                    marker.showInfoWindow();
+                    occupied = Integer.parseInt(dataSnapshot.child("count").getValue().toString());
+                    availabel = 50-occupied;
+                    if(dataSnapshot.child("Status").getValue().toString().equalsIgnoreCase("BrakeDown")){
+                        AlertDialog.Builder build = new AlertDialog.Builder(HomePage.this);
+                        build.setTitle("Bus Status");
+                        build.setMessage("The bus was breaked down. So kindly see the another bus");
+                        build.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alert = build.create();
+                        alert.show();
+                    }
+
+
+                    LocationAddress locationAddress = new LocationAddress();
+                    //locationAddress.getAddressFromLocation(lat, lan, getApplicationContext(), new GeocoderHandler());
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
 
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             //map.animateCamera(CameraUpdateFactory.zoomIn());
             map.animateCamera(CameraUpdateFactory.zoomTo(18), 10000, null);
+
+
 
             distance((float)location.getLatitude(),(float)location.getLongitude(), (float) 13.050428, (float) 80.234941);
         }
@@ -184,26 +242,6 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
 
     public void getBusLocation(){
         //Intent i = getIntent();
-        df = FirebaseDatabase.getInstance().getReference().child("bustrack");
-        df.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //double lat = Long.parseLong(dataSnapshot.child("latitude").getValue().toString());
-                //double lan = Long.parseLong(dataSnapshot.child("longitude").getValue().toString());
-                //latLng1 = new LatLng(lat, lan);
-                occupied = Integer.parseInt(dataSnapshot.child("count").getValue().toString());
-                availabel = 50-occupied;
 
-
-                LocationAddress locationAddress = new LocationAddress();
-                //locationAddress.getAddressFromLocation(lat, lan, getApplicationContext(), new GeocoderHandler());
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 }

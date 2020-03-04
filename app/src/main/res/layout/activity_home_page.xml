@@ -13,6 +13,8 @@
 
     <include layout="@layout/content_home_page" />
 
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/gps"
         android:layout_width="wrap_content"

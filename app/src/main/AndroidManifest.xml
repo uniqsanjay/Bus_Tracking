@@ -14,14 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".Driver">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".Driver_SelectRoot" />
-        <activity android:name=".Driver_Selectroot" />
         <activity android:name=".User_Selectroot" />
         <activity android:name=".ViewBusCapacity" />
 
@@ -40,5 +34,4 @@
         <activity android:name=".Splash" />
         <activity android:name=".Login" />
     </application>
-
 </manifest>

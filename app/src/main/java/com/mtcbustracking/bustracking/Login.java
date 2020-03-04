@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(uname.getEditText().getText().toString().equalsIgnoreCase("admin") && pass.getEditText().getText().toString().equalsIgnoreCase("admin")){
-
+                    startActivity(new Intent(Login.this, Driver.class));
                 }else {
                     config.login(Login.this, uname.getEditText().getText().toString(), pass.getEditText().getText().toString());
                 }
