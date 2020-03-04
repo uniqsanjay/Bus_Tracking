@@ -1,16 +1,19 @@
 package com.mtcbustracking.bustracking;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -63,9 +66,9 @@ public class ViewBusCapacity extends AppCompatActivity {
         place = new ArrayList();
         occupied = new ArrayList();
         available = new ArrayList();
-        place.add("T.nagar");
-        place.add("Vadapalani");
-        df = FirebaseDatabase.getInstance().getReference().child("bustrack");
+        place.add("Potheri");
+        place.add("Vandalur");
+        df = FirebaseDatabase.getInstance().getReference().child("MTC50");
         df.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -73,6 +76,19 @@ public class ViewBusCapacity extends AppCompatActivity {
                 //double lan = Long.parseLong(dataSnapshot.child("longitude").getValue().toString());
                 occup = Integer.parseInt(dataSnapshot.child("count").getValue().toString());
                 avail = 50-occup;
+                if(occup==50){
+                    AlertDialog.Builder build = new AlertDialog.Builder(ViewBusCapacity.this);
+                    build.setTitle("Bus Capacity");
+                    build.setMessage("The bus was full. You can see for the next bus..");
+                    build.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alert = build.create();
+                    alert.show();
+                }
                 occupied.add(String.valueOf(occup));
                 available.add(String.valueOf(avail));
 

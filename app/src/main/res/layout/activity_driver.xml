@@ -14,4 +14,12 @@
         android:src="@drawable/alert"
         android:layout_height="200dp"/>
 
+    <ImageView
+        android:id="@+id/solved"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/solved"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

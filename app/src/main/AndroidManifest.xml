@@ -16,7 +16,9 @@
         <activity android:name=".Driver">
 
         </activity>
-        <activity android:name=".User_Selectroot" />
+        <activity android:name=".User_Selectroot" >
+
+        </activity>
         <activity android:name=".ViewBusCapacity" />
 
         <meta-data
@@ -24,14 +26,16 @@
             android:value="AIzaSyDTo1KFmOS1p45CsZKU8neSQEaUUZuy_fg" />
 
         <activity android:name=".HomePage">
+
+        </activity>
+        <activity android:name=".Sign_Up" />
+        <activity android:name=".Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Sign_Up" />
-        <activity android:name=".Splash" />
         <activity android:name=".Login" />
     </application>
 </manifest>

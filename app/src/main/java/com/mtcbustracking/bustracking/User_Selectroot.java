@@ -39,6 +39,7 @@ public class User_Selectroot extends AppCompatActivity {
         search = findViewById(R.id.search);
         rootlayout = findViewById(R.id.rootlayout);
         rootlist = findViewById(R.id.user_root_list);
+
         root = new ArrayList();
         from = new ArrayList();
         to = new ArrayList();
@@ -54,24 +55,18 @@ public class User_Selectroot extends AppCompatActivity {
     }
 
     public void getRootList(){
-        root.clear();
-        from.add("Avadi");
-        from.add("Ambattur OT");
-        to.add("Mandaveli");
-        to.add("T.Nagar");
+
         df = FirebaseDatabase.getInstance().getReference();
         df.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snap: dataSnapshot.getChildren()){
                     root.add(snap.child("bus_no").getValue().toString());
-                    Toast.makeText(User_Selectroot.this, root.toString(), Toast.LENGTH_SHORT).show();
+                    from.add(snap.child("Src").getValue().toString());
+                    to.add(snap.child("Dest").getValue().toString());
+                    //Toast.makeText(User_Selectroot.this, root.toString(), Toast.LENGTH_SHORT).show();
                 }
-                linearLayoutManager = new LinearLayoutManager(User_Selectroot.this);
-                rootlist.setLayoutManager(linearLayoutManager);
-                custom_rootlist = new Custom_Rootlist(User_Selectroot.this, root, from, to);
-                rootlist.setAdapter(custom_rootlist);
-                custom_rootlist.notifyDataSetChanged();
+
             }
 
             @Override
@@ -79,5 +74,11 @@ public class User_Selectroot extends AppCompatActivity {
 
             }
         });
+
+        linearLayoutManager = new LinearLayoutManager(User_Selectroot.this);
+        rootlist.setLayoutManager(linearLayoutManager);
+        custom_rootlist = new Custom_Rootlist(User_Selectroot.this, root, from, to);
+        rootlist.setAdapter(custom_rootlist);
+        custom_rootlist.notifyDataSetChanged();
     }
 }

@@ -71,7 +71,7 @@ public class Configurations {
                         db.execSQL("Insert into Tables(Status)values('1')");
                         db.close();
                         Toast.makeText(context, "Login Successfull", Toast.LENGTH_SHORT).show();
-                        context.startActivity(new Intent(context, HomePage.class));
+                        context.startActivity(new Intent(context, User_Selectroot.class));
 
                     }else{
                         progressDialog.dismiss();

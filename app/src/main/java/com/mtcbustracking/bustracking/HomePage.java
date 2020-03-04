@@ -68,16 +68,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
         gps = findViewById(R.id.gps);
         seats = findViewById(R.id.total_seat);
 
-
-
-
         mapFragment.getMapAsync(HomePage.this);
-        gps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //mapFragment.getMapAsync(HomePage.this);
-            }
-        });
 
         seats.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +118,6 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
         public void onLocationChanged(Location location) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             //LatLng latLng1 = new LatLng(13.050428, 80.234941);
-            getBusLocation();
 
             //Getting the address from lat and lan coordinates
 
@@ -143,21 +133,12 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
             .position(latLng));
 
             //Getting location from the firebase database
-            df = FirebaseDatabase.getInstance().getReference().child("bustrack");
+            Intent i = getIntent();
+            df = FirebaseDatabase.getInstance().getReference().child(i.getStringExtra("Root_no"));
             df.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    double lat = Long.parseLong(dataSnapshot.child("latitude").getValue().toString());
-                    double lan = Long.parseLong(dataSnapshot.child("longitude").getValue().toString());
-                    latLng1 = new LatLng(lat, lan);
-                    //latLng1 = new LatLng(13.050428, 80.234941);
-                    Marker marker = map.addMarker(new MarkerOptions()
-                            .position(latLng1)
-                            .title("Est Time")
-                            .snippet(num+"min"));
-                    marker.showInfoWindow();
-                    occupied = Integer.parseInt(dataSnapshot.child("count").getValue().toString());
-                    availabel = 50-occupied;
+
                     if(dataSnapshot.child("Status").getValue().toString().equalsIgnoreCase("BrakeDown")){
                         AlertDialog.Builder build = new AlertDialog.Builder(HomePage.this);
                         build.setTitle("Bus Status");
@@ -170,6 +151,18 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
                         });
                         AlertDialog alert = build.create();
                         alert.show();
+                    }else{
+                        double lat = Double.parseDouble(dataSnapshot.child("latitude").getValue().toString());
+                        double lan = Double.parseDouble(dataSnapshot.child("longitude").getValue().toString());
+                        latLng1 = new LatLng(lat, lan);
+                        //latLng1 = new LatLng(13.05, 80.23);
+                        Marker marker = map.addMarker(new MarkerOptions()
+                                .position(latLng1)
+                                .title("Est Time")
+                                .snippet(num+"min"));
+                        marker.showInfoWindow();
+                        occupied = Integer.parseInt(dataSnapshot.child("count").getValue().toString());
+                        availabel = 50-occupied;
                     }
 
 
@@ -220,7 +213,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
-        Toast.makeText(HomePage.this, "The dist :"+dist, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(HomePage.this, "The dist :"+dist, Toast.LENGTH_SHORT).show();
         return dist;
     }
 
@@ -238,10 +231,5 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback{
             }
             Toast.makeText(HomePage.this, "Address :"+locationAddress, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void getBusLocation(){
-        //Intent i = getIntent();
-
     }
 }
